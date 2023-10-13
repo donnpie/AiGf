@@ -1,1 +1,4 @@
 .env
+voices.json
+audio.mp3
+sound/
