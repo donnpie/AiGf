@@ -54,7 +54,7 @@ def get_text_splitter(length_function, chunk_size=500, chunk_overlap=20, separat
 # Get text from a file
 def get_text_from_file(file_path: str) -> str:
     """Load text from a text file"""
-    with open(file_path, "r") as file:
+    with open(file_path, "r", encoding="utf-8") as file:
         file_content = file.read()
     return file_content
 
@@ -77,12 +77,12 @@ def add_metadata(chunks):
 
 # Optional: Save to file. Note the format is json lines (jsonl)
 def save_to_jsonl_file(data, file_path):
-    with open(file_path, 'w') as f:
+    with open(file_path, 'w', encoding='utf-8') as f:
         for item in data:
             f.write(json.dumps(item))
 
 def save_to_json_file(data, file_path):
-    with open(file_path, 'w') as f:
+    with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f)
       
 # Optional Combine the lines again (sometime you need to combine lines from multiple files)
@@ -131,6 +131,7 @@ if __name__ == "__main__":
     # Get text to be chunked
     input_file_path = "./aiutils/sample_text.txt"
     text = get_text_from_file(input_file_path)
+    # print(text)
     
     # Split the text
     chunks = split_text(text, text_splitter)
@@ -140,13 +141,13 @@ if __name__ == "__main__":
     
     # Add metadata to chunks
     data = add_metadata(chunks)
-    # print(data)
+    print(data)
     
     # Optional: save to file
-    input_file_path = './aiutils/training_data.jsonl'
-    save_to_jsonl_file(data, input_file_path)
-    input_file_path = './aiutils/training_data.json'
-    save_to_json_file(data, input_file_path)
+    output_file_path = './aiutils/training_data.jsonl'
+    save_to_jsonl_file(data, output_file_path)
+    output_file_path = './aiutils/training_data.json'
+    save_to_json_file(data, output_file_path)
     
     # Optional read file into memory
     # documents = read_jsonl('training_data.jsonl')
