@@ -32,15 +32,6 @@ def get_length_function(tokenizer):
 
     return tiktoken_len
 
-
-def tiktoken_len(text_to_encode: str):
-    """Get the number of tokens in a piece of text. Use this function as the arg for length_function param in RecursiveCharacterTextSplitter. Ensure that tokenizer is declared outside the scope of this function."""
-    tokens = tokenizer.encode(
-        text_to_encode,
-        disallowed_special=()
-    )
-    return len(tokens)
-
 def get_token_count(text_to_encode: str, model_name: str):
     """Just a helper function. Don't use for chunking."""
     tokenizer_name = tiktoken.encoding_name_for_model(model_name) # Find the encoder for a given model
@@ -89,6 +80,10 @@ def save_to_jsonl_file(data, file_path):
     with open(file_path, 'w') as f:
         for item in data:
             f.write(json.dumps(item))
+
+def save_to_json_file(data, file_path):
+    with open(file_path, 'w') as f:
+        json.dump(data, f)
       
 # Optional Combine the lines again (sometime you need to combine lines from multiple files)
 # TODO: There is a bug in here that is still not fixed: JSONDecodeError: Expecting property name enclosed in double quotes: line 2 column 1 (char 2) or aJSONDecodeError: Extra data: line 1 column 2494 (char 2493)
@@ -121,35 +116,37 @@ def chunk_and_save(chunker_setup_obj):
 if __name__ == "__main__":
 # Typical usage:
 
-    # #Specify the model 
-    # model_name = 'gpt-3.5-turbo'
+    #Specify the model 
+    model_name = 'gpt-3.5-turbo'
     
-    # # Define tokenizer
-    # tokenizer = get_tokenizer_for_model(model_name)
+    # Define tokenizer
+    tokenizer = get_tokenizer_for_model(model_name)
     
-    # # Define lenght function
-    # length_function = tiktoken_len
+    # Define lenght function
+    length_function = get_length_function(tokenizer)
     
-    # # Set up the text splitter function
-    # text_splitter = get_text_splitter(length_function)
+    # Set up the text splitter function
+    text_splitter = get_text_splitter(length_function)
     
-    # # Get text to be chunked
-    # input_file_path = "./aiutils/sample_text.txt"
-    # text = get_text_from_file(input_file_path)
+    # Get text to be chunked
+    input_file_path = "./aiutils/sample_text.txt"
+    text = get_text_from_file(input_file_path)
     
-    # # Split the text
-    # chunks = split_text(text, text_splitter)
+    # Split the text
+    chunks = split_text(text, text_splitter)
     
-    # # Inspect
-    # len(chunks)
+    # Inspect
+    # print(len(chunks))
     
-    # # Add metadata to chunks
-    # data = add_metadata(chunks)
+    # Add metadata to chunks
+    data = add_metadata(chunks)
     # print(data)
     
-    # # Optional: save to file
-    # input_file_path = './aiutils/training_data.jsonl'
-    # save_to_jsonl_file(data, input_file_path)
+    # Optional: save to file
+    input_file_path = './aiutils/training_data.jsonl'
+    save_to_jsonl_file(data, input_file_path)
+    input_file_path = './aiutils/training_data.json'
+    save_to_json_file(data, input_file_path)
     
     # Optional read file into memory
     # documents = read_jsonl('training_data.jsonl')
@@ -161,10 +158,10 @@ if __name__ == "__main__":
     # print(get_token_count(text, 'gpt-3.5-turbo'))  
     
     # To do the whole thing in two lines
-    chunker_setup_obj = {
-        'model_name': 'gpt-3.5-turbo',
-        'input_file_path': "./aiutils/sample_text.txt",
-        'output_file_path': './aiutils/training_data.jsonl'
-    }
+    # chunker_setup_obj = {
+    #     'model_name': 'gpt-3.5-turbo',
+    #     'input_file_path': "./aiutils/sample_text.txt",
+    #     'output_file_path': './aiutils/training_data.jsonl'
+    # }
     
-    chunk_and_save(chunker_setup_obj)
+    # chunk_and_save(chunker_setup_obj)
