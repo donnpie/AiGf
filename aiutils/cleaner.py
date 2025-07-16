@@ -278,3 +278,5 @@ if __name__ == "__main__":
     # example_detect_encoding()
     # example_find_non_displayable_characters()
     # example_remove_non_ascii()
+    
+    # TODO: Added a quality indicator for metadata (show how complete is metadata)
